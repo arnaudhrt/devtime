@@ -1,0 +1,99 @@
+package internal
+
+import (
+	"fmt"
+	"strings"
+	"time"
+)
+
+const barWidth = 20
+
+// FormatDuration formats a duration as "Xh Ym" (e.g. "2h 45m").
+func FormatDuration(d time.Duration) string {
+	h := int(d.Hours())
+	m := int(d.Minutes()) % 60
+	return fmt.Sprintf("%dh %02dm", h, m)
+}
+
+// PrintSummary prints a full summary with bar chart.
+// Header example: "Today: 4h 23m"
+func PrintSummary(header string, summary Summary) {
+	if summary.Total == 0 {
+		fmt.Printf("%s: no data\n", header)
+		return
+	}
+
+	fmt.Printf("\n  %s: %s\n\n", header, FormatDuration(summary.Total))
+
+	// Find the longest project name for alignment
+	maxNameLen := 0
+	for _, p := range summary.Projects {
+		if len(p.Name) > maxNameLen {
+			maxNameLen = len(p.Name)
+		}
+	}
+
+	// Print project breakdown with bar chart
+	fmt.Println("  Projects:")
+	for _, p := range summary.Projects {
+		pct := float64(p.Duration) / float64(summary.Total) * 100
+		filled := int(float64(barWidth) * float64(p.Duration) / float64(summary.Total))
+		if filled < 0 {
+			filled = 0
+		}
+		if filled > barWidth {
+			filled = barWidth
+		}
+		empty := barWidth - filled
+		bar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
+		fmt.Printf("    %-*s  %s  %s  %3.0f%%\n", maxNameLen, p.Name, FormatDuration(p.Duration), bar, pct)
+	}
+
+	// Print language breakdown
+	if len(summary.Languages) > 0 {
+		maxLangLen := 0
+		for _, l := range summary.Languages {
+			if len(l.Name) > maxLangLen {
+				maxLangLen = len(l.Name)
+			}
+		}
+
+		fmt.Println()
+		fmt.Println("  Languages:")
+		for _, l := range summary.Languages {
+			pct := float64(l.Duration) / float64(summary.Total) * 100
+			filled := int(float64(barWidth) * float64(l.Duration) / float64(summary.Total))
+			if filled < 0 {
+				filled = 0
+			}
+			if filled > barWidth {
+				filled = barWidth
+			}
+			empty := barWidth - filled
+			bar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
+			fmt.Printf("    %-*s  %s  %s  %3.0f%%\n", maxLangLen, l.Name, FormatDuration(l.Duration), bar, pct)
+		}
+	}
+
+	fmt.Println()
+}
+
+// PrintStatus prints the active/inactive status.
+func PrintStatus(active bool, session *Session) {
+	if active && session != nil {
+		dur := time.Since(session.Start)
+		fmt.Printf("\n  Status: active\n")
+		fmt.Printf("  Project:  %s\n", session.Project)
+		fmt.Printf("  Language: %s\n", session.Language)
+		fmt.Printf("  Editor:   %s\n", session.Editor)
+		fmt.Printf("  Session:  %s\n\n", FormatDuration(dur))
+	} else if session != nil {
+		fmt.Printf("\n  Status: not active\n")
+		fmt.Printf("  Last session: %s on %s (%s)\n\n",
+			FormatDuration(session.Duration),
+			session.Project,
+			session.End.Format("15:04"))
+	} else {
+		fmt.Println("\n  Status: not active\n  No recent sessions\n")
+	}
+}
