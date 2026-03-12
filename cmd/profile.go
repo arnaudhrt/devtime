@@ -31,11 +31,10 @@ var profileCmd = &cobra.Command{
 		dailyAvg := summary.Total / time.Duration(data.DaysTracked)
 
 		// Header
-		fmt.Printf("\n  Devtime Profile\n\n")
-		fmt.Printf("  Tracking since: %s\n", data.FirstDay.Format("Jan 2, 2006"))
 		fmt.Printf("  Total time:     %s\n", internal.FormatDuration(summary.Total))
 		fmt.Printf("  Daily average:  %s\n", internal.FormatDuration(dailyAvg))
 		fmt.Printf("  Days tracked:   %d\n", data.DaysTracked)
+		fmt.Printf("  Tracking since: %s\n", data.FirstDay.Format("Jan 2, 2006"))
 
 		// Projects
 		if len(summary.Projects) > 0 {

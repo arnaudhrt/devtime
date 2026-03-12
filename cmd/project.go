@@ -45,9 +45,6 @@ var projectCmd = &cobra.Command{
 		}
 		weekSummary := internal.Summarize(internal.FilterByProject(internal.ComputeSessions(weekEvents), name))
 
-		// Header
-		fmt.Printf("\n  Devtime for %s\n\n", name)
-
 		// Period breakdown
 		fmt.Printf("  All time:    %s\n", internal.FormatDuration(allSummary.Total))
 		fmt.Printf("  This month:  %s\n", internal.FormatDuration(monthSummary.Total))

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/arnaudhrt/devtime/internal"
 	"github.com/spf13/cobra"
@@ -44,9 +43,6 @@ var langCmd = &cobra.Command{
 			return err
 		}
 		weekSummary := internal.Summarize(internal.FilterByLanguage(internal.ComputeSessions(weekEvents), name))
-
-		// Header
-		fmt.Printf("\n  Devtime for %s\n\n", strings.ToUpper(name))
 
 		// Period breakdown
 		fmt.Printf("  All time:    %s\n", internal.FormatDuration(allSummary.Total))
