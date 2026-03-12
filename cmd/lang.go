@@ -19,12 +19,10 @@ var langCmd = &cobra.Command{
 		name := args[0]
 
 		// All time
-		allEvents, err := internal.ReadAllEvents()
+		allSummary, err := internal.AllTimeSummaryForLanguage(name)
 		if err != nil {
 			return err
 		}
-		allSessions := internal.FilterByLanguage(internal.ComputeSessions(allEvents), name)
-		allSummary := internal.Summarize(allSessions)
 
 		if allSummary.Total == 0 {
 			fmt.Printf("No data for language %q.\n", name)

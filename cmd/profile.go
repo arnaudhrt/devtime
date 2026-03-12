@@ -17,36 +17,25 @@ var profileCmd = &cobra.Command{
 			return err
 		}
 
-		events, err := internal.ReadAllEvents()
+		data, err := internal.LoadProfileData()
 		if err != nil {
 			return err
 		}
 
-		sessions := internal.ComputeSessions(events)
-		summary := internal.Summarize(sessions)
-
+		summary := data.Summary
 		if summary.Total == 0 {
 			fmt.Println("No coding data yet.")
 			return nil
 		}
 
-		// Count unique days and find earliest session
-		days := make(map[string]bool)
-		earliest := sessions[0].Start
-		for _, s := range sessions {
-			days[s.Start.Format(time.DateOnly)] = true
-			if s.Start.Before(earliest) {
-				earliest = s.Start
-			}
-		}
-		dailyAvg := summary.Total / time.Duration(len(days))
+		dailyAvg := summary.Total / time.Duration(data.DaysTracked)
 
 		// Header
 		fmt.Printf("\n  Devtime Profile\n\n")
-		fmt.Printf("  Tracking since: %s\n", earliest.Format("Jan 2, 2006"))
+		fmt.Printf("  Tracking since: %s\n", data.FirstDay.Format("Jan 2, 2006"))
 		fmt.Printf("  Total time:     %s\n", internal.FormatDuration(summary.Total))
 		fmt.Printf("  Daily average:  %s\n", internal.FormatDuration(dailyAvg))
-		fmt.Printf("  Days tracked:   %d\n", len(days))
+		fmt.Printf("  Days tracked:   %d\n", data.DaysTracked)
 
 		// Projects
 		if len(summary.Projects) > 0 {

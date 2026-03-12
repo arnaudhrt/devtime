@@ -19,12 +19,10 @@ var projectCmd = &cobra.Command{
 		name := args[0]
 
 		// All time
-		allEvents, err := internal.ReadAllEvents()
+		allSummary, err := internal.AllTimeSummaryForProject(name)
 		if err != nil {
 			return err
 		}
-		allSessions := internal.FilterByProject(internal.ComputeSessions(allEvents), name)
-		allSummary := internal.Summarize(allSessions)
 
 		if allSummary.Total == 0 {
 			fmt.Printf("No data for project %q.\n", name)
@@ -84,24 +82,6 @@ var projectCmd = &cobra.Command{
 		fmt.Println()
 		return nil
 	},
-}
-
-func loadEventsForPeriod(period string) ([]internal.Event, string, error) {
-	switch period {
-	case "week":
-		start, end := internal.WeekRange()
-		events, err := internal.ReadEventsForRange(start, end)
-		return events, "This Week", err
-	case "month":
-		start, end := internal.MonthRange()
-		events, err := internal.ReadEventsForRange(start, end)
-		return events, "This Month", err
-	case "all":
-		events, err := internal.ReadAllEvents()
-		return events, "All Time", err
-	default:
-		return nil, "", fmt.Errorf("invalid period %q: use all, month, or week", period)
-	}
 }
 
 func init() {

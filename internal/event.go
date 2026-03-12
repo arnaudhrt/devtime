@@ -117,17 +117,27 @@ func ReadEventsForRange(start, end time.Time) ([]Event, error) {
 }
 
 // CheckDataExists returns an error if the ~/.devtime/ directory doesn't exist
-// or contains no event files.
+// or contains no event or summary files. It also triggers auto-compaction
+// of stale month files.
 func CheckDataExists() error {
 	dir, err := EventsDir()
 	if err != nil {
 		return err
 	}
-	matches, err := filepath.Glob(filepath.Join(dir, "events-*.jsonl"))
+
+	if err := AutoCompact(); err != nil {
+		return err
+	}
+
+	events, err := filepath.Glob(filepath.Join(dir, "events-*.jsonl"))
 	if err != nil {
 		return err
 	}
-	if len(matches) == 0 {
+	summaries, err := filepath.Glob(filepath.Join(dir, "summary-*.json"))
+	if err != nil {
+		return err
+	}
+	if len(events) == 0 && len(summaries) == 0 {
 		return fmt.Errorf("no data found in %s\nMake sure the devtime VS Code extension is installed and running:\nhttps://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime-local", dir)
 	}
 	return nil

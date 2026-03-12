@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"sort"
 
 	"github.com/arnaudhrt/devtime/internal"
 	"github.com/manifoldco/promptui"
@@ -16,28 +15,14 @@ var langsCmd = &cobra.Command{
 		if err := internal.CheckDataExists(); err != nil {
 			return err
 		}
-		events, err := internal.ReadAllEvents()
+		langs, err := internal.AllTimeLanguageNames()
 		if err != nil {
 			return err
 		}
-
-		sessions := internal.ComputeSessions(events)
-
-		// Extract unique language names.
-		seen := make(map[string]bool)
-		for _, s := range sessions {
-			seen[s.Language] = true
-		}
-		if len(seen) == 0 {
+		if len(langs) == 0 {
 			fmt.Println("No languages found.")
 			return nil
 		}
-
-		langs := make([]string, 0, len(seen))
-		for name := range seen {
-			langs = append(langs, name)
-		}
-		sort.Strings(langs)
 
 		prompt := promptui.Select{
 			Label: "Select a language",
