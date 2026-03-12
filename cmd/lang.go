@@ -45,7 +45,7 @@ var langCmd = &cobra.Command{
 		weekSummary := internal.Summarize(internal.FilterByLanguage(internal.ComputeSessions(weekEvents), name))
 
 		// Period breakdown
-		fmt.Printf("  All time:    %s\n", internal.FormatDuration(allSummary.Total))
+		fmt.Printf("  \nAll time:    %s\n", internal.FormatDuration(allSummary.Total))
 		fmt.Printf("  This month:  %s\n", internal.FormatDuration(monthSummary.Total))
 		fmt.Printf("  This week:   %s\n", internal.FormatDuration(weekSummary.Total))
 
