@@ -1,6 +1,6 @@
 package main
 
-import "devtime/cmd"
+import "github.com/arnaudhrt/devtime/cmd"
 
 func main() {
 	cmd.Execute()

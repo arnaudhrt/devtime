@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"devtime/internal"
+	"github.com/arnaudhrt/devtime/internal"
 
 	"github.com/spf13/cobra"
 )
