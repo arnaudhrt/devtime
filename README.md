@@ -32,25 +32,25 @@ Install the official release binary by copy/pasting the appropriate command belo
 On a **Mac with an Apple Silicon (M) processor**:
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | tar xz -C /usr/local/bin devtime
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
 On an **older Mac with an Intel processor**:
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | tar xz -C /usr/local/bin devtime
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
 On a **Linux machine with an Intel/AMD processor**:
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | tar xz -C /usr/local/bin devtime
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
 On a **Linux machine with an ARM processor**:
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | tar xz -C /usr/local/bin devtime
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
 On a **Windows machine** (in PowerShell):
