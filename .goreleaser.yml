@@ -12,7 +12,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w
+      - -s -w -X github.com/arnaudhrt/devtime/cmd.Version={{.Version}}
 
 archives:
   - formats:
