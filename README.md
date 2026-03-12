@@ -27,10 +27,54 @@ One JSON object per line in `~/.devtime/events-YYYY-MM.jsonl`:
 
 ## Installation
 
+Install the official release binary by copy/pasting the appropriate command below into a terminal.
+
+On a **Mac with an Apple Silicon (M) processor**:
+
 ```bash
-go build -o devtime .
-# Move to somewhere in your PATH:
-mv devtime /usr/local/bin/
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | tar xz -C /usr/local/bin devtime
+```
+
+On an **older Mac with an Intel processor**:
+
+```bash
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | tar xz -C /usr/local/bin devtime
+```
+
+On a **Linux machine with an Intel/AMD processor**:
+
+```bash
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | tar xz -C /usr/local/bin devtime
+```
+
+On a **Linux machine with an ARM processor**:
+
+```bash
+curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | tar xz -C /usr/local/bin devtime
+```
+
+On a **Windows machine** (in PowerShell):
+
+```powershell
+cd ~
+curl https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_windows_amd64.zip -OutFile devtime.zip
+Expand-Archive devtime.zip -Force -DestinationPath $env:LOCALAPPDATA\Microsoft\WindowsApps
+Remove-Item devtime.zip
+```
+
+You should now be able to run:
+
+```
+$ devtime --help
+Track your coding time from the terminal
+```
+
+### From source
+
+If you have Go installed, you can also install with:
+
+```bash
+go install github.com/arnaudhrt/devtime@latest
 ```
 
 ## Commands
@@ -145,23 +189,11 @@ $ devtime lang Go week
     Go  8h 30m  ████████████████████  100%
 ```
 
-## VS Code Extension Setup
+## VS Code Extension
 
-Install the [devtime-vscode](../devtime-vscode/) extension:
+Install the [devtime extension](https://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime) from the VS Code Marketplace.
 
-```bash
-cd ../devtime-vscode
-npm install
-npm run build
-```
-
-Then symlink or copy it into your VS Code extensions directory:
-
-```bash
-ln -s "$(pwd)" ~/.vscode/extensions/devtime-vscode
-```
-
-Restart VS Code. The extension will:
+The extension will:
 - Send **heartbeat** events every 30 seconds while you code
 - Send **focus**/**blur** events when the VS Code window gains/loses focus
 - Auto-start the `devtime serve` agent if it's not running

@@ -1,5 +1,6 @@
 # Binary
 devtime
+dist/
 
 # OS
 .DS_Store
