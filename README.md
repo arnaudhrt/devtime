@@ -1,59 +1,42 @@
 # devtime
 
-A local-first coding time tracker for the terminal. Reads event files written by the [devtime VS Code extension](../devtime-vscode/) and displays coding time stats with bar charts.
+Track your coding time from the terminal. Local-only, no account, no cloud.
 
-No daemon, no database, no cloud — just files and a CLI.
+## Prerequisites
 
-## How It Works
+Devtime currently works with **VS Code only**. Install the extension first:
 
-1. The **VS Code extension** sends coding events (heartbeat, focus, blur) to a local agent
-2. The **agent** (`devtime serve`) writes events as JSONL to `~/.devtime/events-YYYY-MM.jsonl`
-3. The **CLI** reads those files, computes sessions on the fly, and displays stats
+[devtime for VS Code](https://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime-local)
 
-### Session Rules
-
-- Events within 5 minutes of each other belong to the same session
-- A `blur` event ends the current session immediately
-- A project or language change starts a new session
-- A single isolated event counts as 30 seconds
-
-### Event File Format
-
-One JSON object per line in `~/.devtime/events-YYYY-MM.jsonl`:
-
-```json
-{"ts":"2026-03-11T09:00:00+01:00","event":"heartbeat","project":"my-app","lang":"typescript","editor":"vscode"}
-```
+The extension runs in the background and tracks your coding activity locally in `~/.devtime/`.
 
 ## Installation
 
-Install the official release binary by copy/pasting the appropriate command below into a terminal.
-
-On a **Mac with an Apple Silicon (M) processor**:
+**Mac (Apple Silicon):**
 
 ```bash
 curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
-On an **older Mac with an Intel processor**:
+**Mac (Intel):**
 
 ```bash
 curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
-On a **Linux machine with an Intel/AMD processor**:
+**Linux (amd64):**
 
 ```bash
 curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
-On a **Linux machine with an ARM processor**:
+**Linux (arm64):**
 
 ```bash
 curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
 ```
 
-On a **Windows machine** (in PowerShell):
+**Windows (PowerShell):**
 
 ```powershell
 cd ~
@@ -62,26 +45,56 @@ Expand-Archive devtime.zip -Force -DestinationPath $env:LOCALAPPDATA\Microsoft\W
 Remove-Item devtime.zip
 ```
 
-You should now be able to run:
-
-```
-$ devtime --help
-Track your coding time from the terminal
-```
-
-### From source
-
-If you have Go installed, you can also install with:
+**From source:**
 
 ```bash
 go install github.com/arnaudhrt/devtime@latest
 ```
 
-## Commands
+## Usage
+
+### `devtime profile`
+
+```
+$ devtime profile
+
+  Devtime Profile
+
+  Tracking since: Mar 11, 2026
+  Total time:     124h 10m
+  Daily average:  2h 45m
+  Days tracked:   45
+
+  Projects:
+    my-app   80h 20m  █████████████░░░░░░░   65%
+    devtime  28h 40m  ████░░░░░░░░░░░░░░░░   23%
+    my-proj  15h 10m  ██░░░░░░░░░░░░░░░░░░   12%
+
+  Languages:
+    TypeScript  72h 30m  ███████████░░░░░░░░░   58%
+    Go          38h 25m  ██████░░░░░░░░░░░░░░   31%
+    CSS         13h 15m  ██░░░░░░░░░░░░░░░░░░   11%
+```
+
+### `devtime today` / `week` / `month`
+
+```
+$ devtime today
+
+  Today: 4h 23m
+
+  Projects:
+    my-app   2h 45m  ██████████████░░░░░░   63%
+    devtime  1h 12m  ██████░░░░░░░░░░░░░░   27%
+    my-proj  0h 26m  ██░░░░░░░░░░░░░░░░░░   10%
+
+  Languages:
+    TypeScript  2h 50m  █████████████░░░░░░░   65%
+    Go          1h 07m  █████░░░░░░░░░░░░░░░   26%
+    CSS         0h 26m  ██░░░░░░░░░░░░░░░░░░    9%
+```
 
 ### `devtime status`
-
-Show whether you're currently coding and info about the active/last session.
 
 ```
 $ devtime status
@@ -93,78 +106,28 @@ $ devtime status
   Session:  0h 45m
 ```
 
-If inactive:
+### `devtime projects`
+
+Interactive project picker. Select a project to see its breakdown.
 
 ```
-$ devtime status
-
-  Status: not active
-  Last session: 0h 32m on my-app (17:04)
+$ devtime projects
+? Select a project:
+> my-app
+  devtime
+  wannee
 ```
 
-### `devtime today`
-
-Show today's total coding time with breakdowns by project and language.
+### `devtime project <name>`
 
 ```
-$ devtime today
+$ devtime project my-app
 
-  Today: 4h 23m
+  Devtime for my-app
 
-  Projects:
-    befitwithjess  2h 45m  ██████████████░░░░░░   63%
-    wannee         1h 12m  ██████░░░░░░░░░░░░░░   27%
-    devtime        0h 26m  ██░░░░░░░░░░░░░░░░░░   10%
-
-  Languages:
-    TypeScript  2h 50m  █████████████░░░░░░░   65%
-    Go          1h 07m  █████░░░░░░░░░░░░░░░   26%
-    CSS         0h 26m  ██░░░░░░░░░░░░░░░░░░    9%
-```
-
-### `devtime week`
-
-Show this week's coding time (Monday through today).
-
-```
-$ devtime week
-
-  This Week: 18h 42m
-
-  Projects:
-    ...
-
-  Languages:
-    ...
-```
-
-### `devtime month`
-
-Show this month's coding time.
-
-```
-$ devtime month
-
-  This Month: 62h 15m
-
-  Projects:
-    ...
-
-  Languages:
-    ...
-```
-
-### `devtime project <name> <all|month|week>`
-
-Show coding time for a specific project, broken down by language.
-
-```
-$ devtime project my-app month
-
-  my-app — This Month: 24h 10m
-
-  Projects:
-    my-app  24h 10m  ████████████████████  100%
+  All time:    80h 20m
+  This month:  24h 10m
+  This week:    8h 30m
 
   Languages:
     TypeScript  18h 30m  ███████████████░░░░░   77%
@@ -172,35 +135,37 @@ $ devtime project my-app month
     JSON         2h 00m  ██░░░░░░░░░░░░░░░░░░    8%
 ```
 
-### `devtime lang <name> <all|month|week>`
+### `devtime langs`
 
-Show coding time for a specific language, broken down by project.
+Interactive language picker. Select a language to see its breakdown.
 
 ```
-$ devtime lang Go week
+$ devtime langs
+? Select a language:
+> Go
+  TypeScript
+  CSS
+```
 
-  Go — This Week: 8h 30m
+### `devtime lang <name>`
+
+```
+$ devtime lang go
+
+  Devtime for GO
+
+  All time:    38h 25m
+  This month:  12h 15m
+  This week:    8h 30m
 
   Projects:
-    devtime  5h 20m  ████████████░░░░░░░░   63%
-    wannee   3h 10m  ███████░░░░░░░░░░░░░   37%
-
-  Languages:
-    Go  8h 30m  ████████████████████  100%
+    devtime  5h 20m
+    my-proj  3h 10m
 ```
 
-## VS Code Extension
+## Data
 
-Install the [devtime extension](https://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime) from the VS Code Marketplace.
-
-The extension will:
-- Send **heartbeat** events every 30 seconds while you code
-- Send **focus**/**blur** events when the VS Code window gains/loses focus
-- Auto-start the `devtime serve` agent if it's not running
-
-## Data Storage
-
-All data lives in `~/.devtime/`:
+All data is stored locally in `~/.devtime/` as plain text JSONL files, one per month.
 
 ```
 ~/.devtime/
@@ -208,5 +173,3 @@ All data lives in `~/.devtime/`:
 ├── events-2026-02.jsonl
 └── events-2026-03.jsonl
 ```
-
-One file per month. Plain text, easy to inspect, back up, or delete.

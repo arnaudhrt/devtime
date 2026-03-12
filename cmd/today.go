@@ -10,6 +10,9 @@ var todayCmd = &cobra.Command{
 	Use:   "today",
 	Short: "Show today's coding time",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := internal.CheckDataExists(); err != nil {
+			return err
+		}
 		start, end := internal.TodayRange()
 		events, err := internal.ReadEventsForRange(start, end)
 		if err != nil {

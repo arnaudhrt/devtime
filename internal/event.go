@@ -116,6 +116,23 @@ func ReadEventsForRange(start, end time.Time) ([]Event, error) {
 	return allEvents, nil
 }
 
+// CheckDataExists returns an error if the ~/.devtime/ directory doesn't exist
+// or contains no event files.
+func CheckDataExists() error {
+	dir, err := EventsDir()
+	if err != nil {
+		return err
+	}
+	matches, err := filepath.Glob(filepath.Join(dir, "events-*.jsonl"))
+	if err != nil {
+		return err
+	}
+	if len(matches) == 0 {
+		return fmt.Errorf("no data found in %s\nMake sure the devtime VS Code extension is installed and running:\nhttps://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime-local", dir)
+	}
+	return nil
+}
+
 // ReadAllEvents reads events from all event files in ~/.devtime/
 func ReadAllEvents() ([]Event, error) {
 	dir, err := EventsDir()

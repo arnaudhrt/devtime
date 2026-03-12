@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-const barWidth = 20
+const BarWidth = 20
 
 // FormatDuration formats a duration as "Xh Ym" (e.g. "2h 45m").
 func FormatDuration(d time.Duration) string {
@@ -37,14 +37,14 @@ func PrintSummary(header string, summary Summary) {
 	fmt.Println("  Projects:")
 	for _, p := range summary.Projects {
 		pct := float64(p.Duration) / float64(summary.Total) * 100
-		filled := int(float64(barWidth) * float64(p.Duration) / float64(summary.Total))
+		filled := int(float64(BarWidth) * float64(p.Duration) / float64(summary.Total))
 		if filled < 0 {
 			filled = 0
 		}
-		if filled > barWidth {
-			filled = barWidth
+		if filled > BarWidth {
+			filled = BarWidth
 		}
-		empty := barWidth - filled
+		empty := BarWidth - filled
 		bar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
 		fmt.Printf("    %-*s  %s  %s  %3.0f%%\n", maxNameLen, p.Name, FormatDuration(p.Duration), bar, pct)
 	}
@@ -62,14 +62,14 @@ func PrintSummary(header string, summary Summary) {
 		fmt.Println("  Languages:")
 		for _, l := range summary.Languages {
 			pct := float64(l.Duration) / float64(summary.Total) * 100
-			filled := int(float64(barWidth) * float64(l.Duration) / float64(summary.Total))
+			filled := int(float64(BarWidth) * float64(l.Duration) / float64(summary.Total))
 			if filled < 0 {
 				filled = 0
 			}
-			if filled > barWidth {
-				filled = barWidth
+			if filled > BarWidth {
+				filled = BarWidth
 			}
-			empty := barWidth - filled
+			empty := BarWidth - filled
 			bar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
 			fmt.Printf("    %-*s  %s  %s  %3.0f%%\n", maxLangLen, l.Name, FormatDuration(l.Duration), bar, pct)
 		}

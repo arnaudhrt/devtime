@@ -10,6 +10,9 @@ var monthCmd = &cobra.Command{
 	Use:   "month",
 	Short: "Show this month's coding time",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := internal.CheckDataExists(); err != nil {
+			return err
+		}
 		start, end := internal.MonthRange()
 		events, err := internal.ReadEventsForRange(start, end)
 		if err != nil {

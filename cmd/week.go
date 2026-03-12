@@ -10,6 +10,9 @@ var weekCmd = &cobra.Command{
 	Use:   "week",
 	Short: "Show this week's coding time",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := internal.CheckDataExists(); err != nil {
+			return err
+		}
 		start, end := internal.WeekRange()
 		events, err := internal.ReadEventsForRange(start, end)
 		if err != nil {

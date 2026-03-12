@@ -11,6 +11,9 @@ var statusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Show current coding status",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		if err := internal.CheckDataExists(); err != nil {
+			return err
+		}
 		now := time.Now()
 		start := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 		events, err := internal.ReadEventsForRange(start, now)
