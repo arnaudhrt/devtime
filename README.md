@@ -53,17 +53,15 @@ go install github.com/arnaudhrt/devtime@latest
 
 ## Usage
 
-### `devtime profile`
+### `devtime all`
 
 ```
-$ devtime profile
+$ devtime all
 
-  Devtime Profile
-
-  Tracking since: Mar 11, 2026
   Total time:     124h 10m
   Daily average:  2h 45m
   Days tracked:   45
+  Tracking since: Mar 11, 2026
 
   Projects:
     my-app   80h 20m  █████████████░░░░░░░   65%
@@ -76,10 +74,12 @@ $ devtime profile
     CSS         13h 15m  ██░░░░░░░░░░░░░░░░░░   11%
 ```
 
-### `devtime today` / `week` / `month`
+### `devtime`
+
+Running `devtime` with no arguments shows today's breakdown.
 
 ```
-$ devtime today
+$ devtime
 
   Today: 4h 23m
 
@@ -94,6 +94,40 @@ $ devtime today
     CSS         0h 26m  ██░░░░░░░░░░░░░░░░░░    9%
 ```
 
+### `devtime week` / `devtime month [mmm-yyyy]` / `devtime year [yyyy]`
+
+`devtime week` shows the current week. `devtime month` and `devtime year` show the current month/year, or pass an argument to look up a specific one:
+
+```
+$ devtime month nov-2025
+
+  November 2025: 42h 15m
+
+  Projects:
+    my-app   28h 10m  █████████████░░░░░░░   67%
+    devtime  14h 05m  ███████░░░░░░░░░░░░░   33%
+
+  Languages:
+    TypeScript  30h 00m  ██████████████░░░░░░   71%
+    Go          12h 15m  ██████░░░░░░░░░░░░░░   29%
+```
+
+```
+$ devtime year 2025
+
+  2025: 312h 40m
+
+  Projects:
+    my-app   180h 20m  ███████████░░░░░░░░░   58%
+    devtime   82h 10m  █████░░░░░░░░░░░░░░░   26%
+    my-proj   50h 10m  ███░░░░░░░░░░░░░░░░░   16%
+
+  Languages:
+    TypeScript  190h 30m  ████████████░░░░░░░░   61%
+    Go           78h 25m  █████░░░░░░░░░░░░░░░   25%
+    CSS          43h 45m  ███░░░░░░░░░░░░░░░░░   14%
+```
+
 ### `devtime status`
 
 ```
@@ -106,24 +140,20 @@ $ devtime status
   Session:  0h 45m
 ```
 
-### `devtime projects`
+### `devtime project [name]`
 
-Interactive project picker. Select a project to see its breakdown.
+Without a name, opens an interactive picker. With a name, shows the breakdown directly.
 
 ```
-$ devtime projects
+$ devtime project
 ? Select a project:
 > my-app
   devtime
   wannee
 ```
 
-### `devtime project <name>`
-
 ```
 $ devtime project my-app
-
-  Devtime for my-app
 
   All time:    80h 20m
   This month:  24h 10m
@@ -135,24 +165,20 @@ $ devtime project my-app
     JSON         2h 00m  ██░░░░░░░░░░░░░░░░░░    8%
 ```
 
-### `devtime langs`
+### `devtime lang [name]`
 
-Interactive language picker. Select a language to see its breakdown.
+Without a name, opens an interactive picker. With a name, shows the breakdown directly.
 
 ```
-$ devtime langs
+$ devtime lang
 ? Select a language:
 > Go
   TypeScript
   CSS
 ```
 
-### `devtime lang <name>`
-
 ```
 $ devtime lang go
-
-  Devtime for GO
 
   All time:    38h 25m
   This month:  12h 15m
@@ -161,6 +187,21 @@ $ devtime lang go
   Projects:
     devtime  5h 20m
     my-proj  3h 10m
+```
+
+### `devtime doctor`
+
+Check if the VS Code extension is sending events correctly.
+
+```
+$ devtime doctor
+
+  Last event:
+    Type:     heartbeat
+    Project:  my-app
+    Language: typescript
+    Editor:   vscode
+    Time:     Mar 16 14:32:05 (3m ago)
 ```
 
 ## Data

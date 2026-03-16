@@ -82,18 +82,22 @@ func PrintSummary(header string, summary Summary) {
 func PrintStatus(active bool, session *Session) {
 	if active && session != nil {
 		dur := time.Since(session.Start)
-		fmt.Printf("\n  Status: active\n")
+		fmt.Printf("\n")
+		fmt.Printf("  Status: active\n")
 		fmt.Printf("  Project:  %s\n", session.Project)
 		fmt.Printf("  Language: %s\n", session.Language)
 		fmt.Printf("  Editor:   %s\n", session.Editor)
 		fmt.Printf("  Session:  %s\n\n", FormatDuration(dur))
 	} else if session != nil {
-		fmt.Printf("\n  Status: not active\n")
+		fmt.Printf("\n")
+		fmt.Printf("  Status: not active\n")
 		fmt.Printf("  Last session: %s on %s (%s)\n\n",
 			FormatDuration(session.Duration),
 			session.Project,
 			session.End.Format("15:04"))
 	} else {
-		fmt.Println("\n  Status: not active\n  No recent sessions\n")
+		fmt.Printf("\n")
+		fmt.Printf(" Status: not active\n")
+		fmt.Printf(" No recent sessions\n")
 	}
 }

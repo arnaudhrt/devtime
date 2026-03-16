@@ -4,17 +4,43 @@ import (
 	"fmt"
 
 	"github.com/arnaudhrt/devtime/internal"
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
 
 var langCmd = &cobra.Command{
-	Use:   "lang <name>",
-	Short: "Show coding time for a specific language",
-	Args:  cobra.ExactArgs(1),
+	Use:   "lang [name]",
+	Short: "Show coding time for a language (interactive if no name given)",
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := internal.CheckDataExists(); err != nil {
 			return err
 		}
+
+		if len(args) == 0 {
+			langs, err := internal.AllTimeLanguageNames()
+			if err != nil {
+				return err
+			}
+			if len(langs) == 0 {
+				fmt.Println("No languages found.")
+				return nil
+			}
+
+			prompt := promptui.Select{
+				Label: "Select a language",
+				Items: langs,
+				Size:  15,
+			}
+
+			_, selected, err := prompt.Run()
+			if err != nil {
+				fmt.Println("Selection cancelled.")
+				return nil
+			}
+			args = []string{selected}
+		}
+
 		name := args[0]
 
 		// All time
@@ -45,7 +71,8 @@ var langCmd = &cobra.Command{
 		weekSummary := internal.Summarize(internal.FilterByLanguage(internal.ComputeSessions(weekEvents), name))
 
 		// Period breakdown
-		fmt.Printf("  \nAll time:    %s\n", internal.FormatDuration(allSummary.Total))
+		fmt.Printf("  \n")
+		fmt.Printf("  All time:    %s\n", internal.FormatDuration(allSummary.Total))
 		fmt.Printf("  This month:  %s\n", internal.FormatDuration(monthSummary.Total))
 		fmt.Printf("  This week:   %s\n", internal.FormatDuration(weekSummary.Total))
 
