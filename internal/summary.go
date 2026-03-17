@@ -118,7 +118,8 @@ func ReadAllMonthlySummaries() ([]MonthlySummary, error) {
 }
 
 // CompactMonth reads a month's raw events, computes sessions, writes a
-// summary file, and deletes the raw events file.
+// summary file, and deletes the raw events file. If a summary already
+// exists (e.g. from a WakaTime import), the new data is merged into it.
 func CompactMonth(dir string, year int, month time.Month) error {
 	eventsPath := EventFilePath(dir, year, month)
 	events, err := ReadEvents(eventsPath)
@@ -133,6 +134,12 @@ func CompactMonth(dir string, year int, month time.Month) error {
 	sessions := ComputeSessions(events)
 	monthStr := fmt.Sprintf("%04d-%02d", year, int(month))
 	ms := BuildMonthlySummary(monthStr, sessions)
+
+	// Merge with existing summary if one exists.
+	summaryPath := SummaryFilePath(dir, monthStr)
+	if existing, err := ReadMonthlySummary(summaryPath); err == nil {
+		ms = MergeMonthlySummaries(existing, ms)
+	}
 
 	if err := WriteSummary(dir, ms); err != nil {
 		return err
@@ -243,6 +250,65 @@ func SummaryFromMonthlyForLanguage(ms MonthlySummary, lang string) Summary {
 		Projects:  ps,
 		Languages: []LanguageSummary{{Name: lang, Duration: total}},
 	}
+}
+
+// MergeMonthlySummaries merges two MonthlySummary structs by summing
+// durations, unioning days tracked, and extending the date range.
+func MergeMonthlySummaries(a, b MonthlySummary) MonthlySummary {
+	ms := MonthlySummary{
+		Month:            a.Month,
+		TotalSeconds:     a.TotalSeconds + b.TotalSeconds,
+		DaysTracked:      a.DaysTracked + b.DaysTracked,
+		Projects:         make(map[string]int64),
+		Languages:        make(map[string]int64),
+		ProjectLanguages: make(map[string]map[string]int64),
+	}
+
+	// First/last day: pick the earliest first and latest last.
+	ms.FirstDay = a.FirstDay
+	if ms.FirstDay == "" || (b.FirstDay != "" && b.FirstDay < ms.FirstDay) {
+		ms.FirstDay = b.FirstDay
+	}
+	ms.LastDay = a.LastDay
+	if ms.LastDay == "" || (b.LastDay != "" && b.LastDay > ms.LastDay) {
+		ms.LastDay = b.LastDay
+	}
+
+	// Merge projects.
+	for name, secs := range a.Projects {
+		ms.Projects[name] += secs
+	}
+	for name, secs := range b.Projects {
+		ms.Projects[name] += secs
+	}
+
+	// Merge languages.
+	for name, secs := range a.Languages {
+		ms.Languages[name] += secs
+	}
+	for name, secs := range b.Languages {
+		ms.Languages[name] += secs
+	}
+
+	// Merge project-languages.
+	for proj, langs := range a.ProjectLanguages {
+		if ms.ProjectLanguages[proj] == nil {
+			ms.ProjectLanguages[proj] = make(map[string]int64)
+		}
+		for lang, secs := range langs {
+			ms.ProjectLanguages[proj][lang] += secs
+		}
+	}
+	for proj, langs := range b.ProjectLanguages {
+		if ms.ProjectLanguages[proj] == nil {
+			ms.ProjectLanguages[proj] = make(map[string]int64)
+		}
+		for lang, secs := range langs {
+			ms.ProjectLanguages[proj][lang] += secs
+		}
+	}
+
+	return ms
 }
 
 // MergeSummary combines two Summary objects by summing durations.

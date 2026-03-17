@@ -61,10 +61,9 @@ var yearCmd = &cobra.Command{
 					return err
 				}
 				combined = internal.MergeSummary(combined, internal.SummaryFromMonthly(ms))
-				continue
 			}
 
-			// Fall back to raw events for this month
+			// Also read raw events for this month (both sources may exist).
 			start := time.Date(year, m, 1, 0, 0, 0, 0, now.Location())
 			monthEnd := start.AddDate(0, 1, 0).Add(-time.Nanosecond)
 			if m == lastMonth && year == now.Year() {

@@ -189,6 +189,25 @@ $ devtime lang go
     my-proj  3h 10m
 ```
 
+### `devtime wakatime-import <file>`
+
+Import your coding history from a WakaTime JSON export. Data is converted into devtime's compacted monthly format and merged with any existing data.
+
+```
+$ devtime wakatime-import ~/Downloads/wakatime-export.json
+
+Parsing WakaTime export: /Users/you/Downloads/wakatime-export.json
+  2025-03: 18h 29m
+  2025-04: 93h 40m
+  2025-05: 70h 54m
+  2025-06: 138h 44m
+  ...
+
+Imported 13 month(s), total: 1051h 23m
+```
+
+To export your data from WakaTime, go to [wakatime.com/settings/account](https://wakatime.com/settings/account) and export **Daily Totals** (not Heartbeats — heartbeat exports use a different format and won't work).
+
 ### `devtime doctor`
 
 Check if the VS Code extension is sending events correctly.
