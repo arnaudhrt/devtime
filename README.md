@@ -15,26 +15,28 @@ The extension runs in the background and tracks your coding activity locally in 
 **Mac (Apple Silicon):**
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
+mkdir -p ~/.local/bin && curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_arm64.tar.gz | tar xz -C ~/.local/bin devtime
 ```
 
 **Mac (Intel):**
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
+mkdir -p ~/.local/bin && curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_darwin_amd64.tar.gz | tar xz -C ~/.local/bin devtime
 ```
 
 **Linux (amd64):**
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | sudo tar xz -C /usr/local/bin devtime
+mkdir -p ~/.local/bin && curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_amd64.tar.gz | tar xz -C ~/.local/bin devtime
 ```
 
 **Linux (arm64):**
 
 ```bash
-curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | sudo tar xz -C /usr/local/bin devtime
+mkdir -p ~/.local/bin && curl -sSL https://github.com/arnaudhrt/devtime/releases/latest/download/devtime_linux_arm64.tar.gz | tar xz -C ~/.local/bin devtime
 ```
+
+> Make sure `~/.local/bin` is in your `PATH`. Add `export PATH="$HOME/.local/bin:$PATH"` to your `~/.zshrc` or `~/.bashrc` if needed.
 
 **Windows (PowerShell):**
 
