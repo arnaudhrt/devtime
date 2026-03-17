@@ -7,6 +7,29 @@ import (
 )
 
 const BarWidth = 20
+const MinDisplayDuration = 3 * time.Minute
+
+// FilterShort removes projects and languages with less than MinDisplayDuration
+// from a Summary. The Total is not affected.
+func FilterShort(s Summary) Summary {
+	var projects []ProjectSummary
+	for _, p := range s.Projects {
+		if p.Duration >= MinDisplayDuration {
+			projects = append(projects, p)
+		}
+	}
+	var languages []LanguageSummary
+	for _, l := range s.Languages {
+		if l.Duration >= MinDisplayDuration {
+			languages = append(languages, l)
+		}
+	}
+	return Summary{
+		Total:     s.Total,
+		Projects:  projects,
+		Languages: languages,
+	}
+}
 
 // FormatDuration formats a duration as "Xh Ym" (e.g. "2h 45m").
 func FormatDuration(d time.Duration) string {
@@ -22,6 +45,8 @@ func PrintSummary(header string, summary Summary) {
 		fmt.Printf("%s: no data\n", header)
 		return
 	}
+
+	summary = FilterShort(summary)
 
 	fmt.Printf("\n  %s: %s\n\n", header, FormatDuration(summary.Total))
 

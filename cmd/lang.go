@@ -76,6 +76,8 @@ var langCmd = &cobra.Command{
 		fmt.Printf("  This month:  %s\n", internal.FormatDuration(monthSummary.Total))
 		fmt.Printf("  This week:   %s\n", internal.FormatDuration(weekSummary.Total))
 
+		allSummary = internal.FilterShort(allSummary)
+
 		// Projects list
 		if len(allSummary.Projects) > 0 {
 			maxLen := 0

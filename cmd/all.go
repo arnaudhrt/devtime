@@ -21,7 +21,7 @@ var allCmd = &cobra.Command{
 			return err
 		}
 
-		summary := data.Summary
+		summary := internal.FilterShort(data.Summary)
 		if summary.Total == 0 {
 			fmt.Println("No coding data yet.")
 			return nil
