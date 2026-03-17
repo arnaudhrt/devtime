@@ -4,11 +4,12 @@ Track your coding time from the terminal. Local-only, no account, no cloud.
 
 ## Prerequisites
 
-Devtime currently works with **VS Code only**. Install the extension first:
+Devtime requires an editor extension that tracks your coding activity locally in `~/.devtime/`.
 
-[devtime for VS Code](https://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime-local)
-
-The extension runs in the background and tracks your coding activity locally in `~/.devtime/`.
+| Editor | Extension | Status |
+|--------|-----------|--------|
+| VS Code | [devtime for VS Code](https://marketplace.visualstudio.com/items?itemName=arnaudhrt.devtime-local) | Available |
+| Zed | [devtime for Zed](https://github.com/arnaudhrt/devtime-zed) | Pending validation |
 
 ## Installation
 
@@ -212,7 +213,7 @@ To export your data from WakaTime, go to [wakatime.com/settings/account](https:/
 
 ### `devtime doctor`
 
-Check if the VS Code extension is sending events correctly.
+Check if your editor extension is sending events correctly.
 
 ```
 $ devtime doctor
